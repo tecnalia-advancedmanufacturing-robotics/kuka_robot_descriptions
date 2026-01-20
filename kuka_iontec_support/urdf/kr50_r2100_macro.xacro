@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
-  <xacro:macro name="kuka_kr50_r2100_robot" params="prefix package_name *origin">
+  <xacro:macro name="kuka_kr50_r2100_robot" params="prefix package_name link_6_es_angle:=0.0 *origin">
     <!-- links - main serial chain -->
     <link name="world"/>
     <link name="${prefix}base_link">
@@ -120,7 +120,25 @@
     <link name="${prefix}link_6">
       <collision>
         <geometry>
-          <mesh filename="package://${package_name}/meshes/kr50_r2100/collision/link_6.stl"/>
+          <cylinder radius="0.0625" length="0.036"/>
+        </geometry>
+        <origin xyz="0.0 0.0 0.018"/>
+      </collision>
+      <inertial>
+        <inertia ixx="0.00543884122921238" ixy="0.0" ixz="0.0" iyy="0.00497050004638771" iyz="0.0" izz="0.00667989273554355"/>
+        <mass value="3.62E0"/>
+        <origin rpy="-0.2657207469665607 5.14585534055515E-4 1.571146297496868" xyz="-0.00392541436464088 5.41436464088398E-6 -0.00152140883977901"/>
+      </inertial>
+      <visual>
+        <geometry>
+          <mesh filename="package://${package_name}/meshes/kr50_r2100/visual/link_6.dae"/>
+        </geometry>
+        <origin rpy="-0.0 1.5707963 -0.0" xyz="-1.515000 0.0 1.359000"/>
+      </visual>
+    </link><link name="${prefix}link_6_es">
+      <collision>
+        <geometry>
+          <mesh filename="package://${package_name}/meshes/kr50_r2100/collision/link_6_es.stl"/>
         </geometry>
         <origin rpy="-0.0 1.5707963 -0.0" xyz="-1.515000 0.0 1.359000"/>
       </collision>
@@ -131,7 +149,7 @@
       </inertial>
       <visual>
         <geometry>
-          <mesh filename="package://${package_name}/meshes/kr50_r2100/visual/link_6.dae"/>
+          <mesh filename="package://${package_name}/meshes/kr50_r2100/visual/link_6_es.dae"/>
         </geometry>
         <origin rpy="-0.0 1.5707963 -0.0" xyz="-1.515000 0.0 1.359000"/>
       </visual>
@@ -182,6 +200,12 @@
       <limit effort="3.39155998042573E2" lower="-6.108652375E0" upper="6.108652375E0" velocity="5.58505360638185E0"/>
       <origin rpy="1.5707963267948966 -0.0 -1.5707963267948966" xyz="0.149 0.0 -0.047950000000000007"/>
       <parent link="${prefix}link_5"/>
+    </joint>
+    <joint name="${prefix}joint_6_es" type="fixed">
+      <parent link="${prefix}link_6"/>
+      <child link="${prefix}link_6_es"/>
+      <origin rpy="0.0 0.0 ${-link_6_es_angle}"/>
+      <limit effort="0" lower="0" upper="0" velocity="0"/>
     </joint>
     <!-- ROS-Industrial 'base' frame - equivalent of 'KUKA ROBROOT'-->
     <link name="${prefix}base"/>
