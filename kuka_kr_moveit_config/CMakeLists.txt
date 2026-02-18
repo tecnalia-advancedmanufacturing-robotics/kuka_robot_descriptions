@@ -8,12 +8,14 @@ find_package(xacro REQUIRED)
 
 # TODO: add more robots to this list
 set(supported_robots
+  kr4_r600
   kr6_r700_sixx
   kr6_r700_2
   kr6_r900_sixx
   kr6_r900_2
   kr8_r1440_2_arc_hw
   kr8_r2100_2_arc_hw
+  kr10_r900_2
   kr10_r1100_2
   kr12_r1450_3_hw
   kr16_r1610_2
@@ -31,7 +33,7 @@ set(supported_robots
 )
 
 foreach(model IN LISTS supported_robots)
-  xacro_add_files(TARGET ${model} srdf/kr_arm.srdf.xacro REMAP robot_name:=${model} OUTPUT ${model}_arm.srdf INSTALL DESTINATION urdf)
+  xacro_add_files(TARGET ${model} srdf/kr_arm.srdf.xacro REMAP robot_name:=${model} OUTPUT ${model}.srdf INSTALL DESTINATION urdf)
 endforeach()
 
 install(DIRECTORY config srdf launch
