@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="kl4000_links" params="">
+    <material name="dark_grey">
+        <color rgba="0.3 0.3 0.3 1.0"/>
+    </material>
+    <!-- links -->
+    <link name="rail_base_link">
+      <visual>
+        <geometry>
+          <mesh filename="package://kuka_kl_support/meshes/kl4000/visual/KL4000_lange_Kette_BK309_fixed.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="dark_grey"/>
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://kuka_kl_support/meshes/kl4000/collision/KL4000_lange_Kette_BK309_fixed.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </collision>
+    </link>
+    <link name="rail_moving_link">
+      <visual>
+        <geometry>
+          <mesh filename="package://kuka_kl_support/meshes/kl4000/visual/KL4000_lange_Kette_BK309_movinglink.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="dark_grey"/>
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://kuka_kl_support/meshes/kl4000/collision/KL4000_lange_Kette_BK309_movinglink.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </collision>
+    </link>
+    <link name="adapter_plate_link">
+      <visual>
+        <geometry>
+          <mesh filename="package://kuka_kl_support/meshes/kl4000/visual/Zwischenplatte_Quantec.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="dark_grey"/>
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://kuka_kl_support/meshes/kl4000/collision/Zwischenplatte_Quantec.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </collision>
+    </link>
+  </xacro:macro>
+  <xacro:macro name="kl4000_joints" params="robot_base_link yaw_kl_robot:=0.0 *origin">
+    <!-- joints -->
+    <joint name="world-rail_base" type="fixed">
+      <parent link="world"/>
+      <child link="rail_base_link"/>
+      <xacro:insert_block name="origin"/>
+    </joint>
+    <joint name="rail_joint" type="prismatic">
+      <parent link="rail_base_link"/>
+      <child link="rail_moving_link"/>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <axis xyz="1 0 0"/>
+      <limit lower="-1.0" upper="1.0" effort="702.0" velocity="2.5"/>
+    </joint>
+    <joint name="rail-adapter_plate" type="fixed">
+      <parent link="rail_moving_link"/>
+      <child link="adapter_plate_link"/>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.670"/>
+    </joint>
+    <joint name="adapter_plate-robot_base" type="fixed">
+      <parent link="adapter_plate_link"/>
+      <child link="${robot_base_link}"/>
+      <origin rpy="0.0 0.0 ${yaw_kl_robot}" xyz="0.0 0.0 0.035"/>
+    </joint>
+  </xacro:macro>
+</robot>
