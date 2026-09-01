@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <xacro:macro name="kuka_iontec_ros2_control" params="name driver_version client_ip client_port mxa_client_port controller_ip prefix mode use_gpio roundtrip_time verify_robot_model gpio_config **ext_axes_ros2_control_joints">
+  <xacro:macro name="kuka_iontec_ros2_control" params="name driver_version client_ip client_port mxa_client_port controller_ip prefix mode use_gpio roundtrip_time verify_robot_model rsi_xml_config_file gazebo_controller_config_path:=config/fake_hardware_config_6_axis.yaml gpio_config **ext_axes_ros2_control_joints">
     <!-- gazebo -->
     <xacro:if value="${mode == 'gazebo'}">
       <xacro:include filename="$(find kuka_gazebo)/gazebo/kuka_gazebo.xacro"/>
-      <xacro:kuka_gazebo controller_config_package="kuka_resources" controller_config_path="config/fake_hardware_config_6_axis.yaml"/>
+      <xacro:kuka_gazebo controller_config_package="kuka_resources" controller_config_path="${gazebo_controller_config_path}"/>
     </xacro:if>
     <!-- ros2 control -->
     <ros2_control name="${name}" type="system">
@@ -25,6 +25,7 @@
             <param name="client_port">${client_port}</param>
             <param name="name">${name}</param>
             <param name="verify_robot_model">${verify_robot_model}</param>
+            <param name="rsi_xml_config_file">${rsi_xml_config_file}</param>
           </xacro:if>
           <xacro:if value="${driver_version == 'mxa_rsi'}">
             <plugin>kuka_rsi_driver::KukaMxaRsiHardwareInterface</plugin>
@@ -33,11 +34,13 @@
             <param name="client_port">${client_port}</param>
             <param name="mxa_client_port">${mxa_client_port}</param>
             <param name="verify_robot_model">${verify_robot_model}</param>
+            <param name="rsi_xml_config_file">${rsi_xml_config_file}</param>
           </xacro:if>
           <xacro:if value="${driver_version == 'rsi_only'}">
             <plugin>kuka_rsi_driver::KukaRSIHardwareInterface</plugin>
             <param name="client_ip">${client_ip}</param>
             <param name="client_port">${client_port}</param>
+            <param name="rsi_xml_config_file">${rsi_xml_config_file}</param>
           </xacro:if>
         </xacro:if>
         <xacro:if value="${mode == 'gazebo'}">
@@ -47,63 +50,99 @@
       <xacro:insert_block name="ext_axes_ros2_control_joints"/>
       <joint name="${prefix}joint_1">
         <command_interface name="position"/>
-        <command_interface name="velocity"/>
-        <command_interface name="effort"/>
         <state_interface name="position">
           <param name="initial_value">0.0</param>
         </state_interface>
-        <state_interface name="velocity"/>
-        <state_interface name="effort"/>
+        <xacro:unless value="${mode == 'gazebo'}">
+          <command_interface name="velocity"/>
+          <command_interface name="effort"/>
+          <state_interface name="velocity">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+          <state_interface name="effort">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+        </xacro:unless>
       </joint>
       <joint name="${prefix}joint_2">
         <command_interface name="position"/>
-        <command_interface name="velocity"/>
-        <command_interface name="effort"/>
         <state_interface name="position">
           <param name="initial_value">-1.5708</param>
         </state_interface>
-        <state_interface name="velocity"/>
-        <state_interface name="effort"/>
+        <xacro:unless value="${mode == 'gazebo'}">
+          <command_interface name="velocity"/>
+          <command_interface name="effort"/>
+          <state_interface name="velocity">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+          <state_interface name="effort">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+        </xacro:unless>
       </joint>
       <joint name="${prefix}joint_3">
         <command_interface name="position"/>
-        <command_interface name="velocity"/>
-        <command_interface name="effort"/>
         <state_interface name="position">
           <param name="initial_value">1.5708</param>
         </state_interface>
-        <state_interface name="velocity"/>
-        <state_interface name="effort"/>
+        <xacro:unless value="${mode == 'gazebo'}">
+          <command_interface name="velocity"/>
+          <command_interface name="effort"/>
+          <state_interface name="velocity">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+          <state_interface name="effort">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+        </xacro:unless>
       </joint>
       <joint name="${prefix}joint_4">
         <command_interface name="position"/>
-        <command_interface name="velocity"/>
-        <command_interface name="effort"/>
         <state_interface name="position">
           <param name="initial_value">0.0</param>
         </state_interface>
-        <state_interface name="velocity"/>
-        <state_interface name="effort"/>
+        <xacro:unless value="${mode == 'gazebo'}">
+          <command_interface name="velocity"/>
+          <command_interface name="effort"/>
+          <state_interface name="velocity">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+          <state_interface name="effort">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+        </xacro:unless>
       </joint>
       <joint name="${prefix}joint_5">
         <command_interface name="position"/>
-        <command_interface name="velocity"/>
-        <command_interface name="effort"/>
         <state_interface name="position">
           <param name="initial_value">0.0</param>
         </state_interface>
-        <state_interface name="velocity"/>
-        <state_interface name="effort"/>
+        <xacro:unless value="${mode == 'gazebo'}">
+          <command_interface name="velocity"/>
+          <command_interface name="effort"/>
+          <state_interface name="velocity">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+          <state_interface name="effort">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+        </xacro:unless>
       </joint>
       <joint name="${prefix}joint_6">
         <command_interface name="position"/>
-        <command_interface name="velocity"/>
-        <command_interface name="effort"/>
         <state_interface name="position">
           <param name="initial_value">0.0</param>
         </state_interface>
-        <state_interface name="velocity"/>
-        <state_interface name="effort"/>
+        <xacro:unless value="${mode == 'gazebo'}">
+          <command_interface name="velocity"/>
+          <command_interface name="effort"/>
+          <state_interface name="velocity">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+          <state_interface name="effort">
+            <param name="initial_value">0.0</param>
+          </state_interface>
+        </xacro:unless>
       </joint>
       <xacro:if value="${use_gpio}">
         <xacro:include filename="${gpio_config}"/>
